@@ -1,31 +1,50 @@
 import "regenerator-runtime/runtime";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const VoiceCatcher = () => {
   const { transcript, listening, resetTranscript, browserSupportsSpeechRecognition } = useSpeechRecognition();
 
+  const [shouldListen, setShouldListen] = useState(false);
+
   useEffect(() => {
     if (!browserSupportsSpeechRecognition) return;
+
     const recognition = SpeechRecognition.getRecognition();
     if (recognition) {
       recognition.continuous = true;
+
       recognition.onend = () => {
-        console.log("Sesja zakończona – restartuję nasłuch");
-        SpeechRecognition.startListening({ continuous: true, language: "pl-PL" });
+        console.log("onend, listening flag:", shouldListen);
+        if (shouldListen) {
+          SpeechRecognition.startListening({
+            continuous: true,
+            language: "pl-PL",
+          });
+        }
       };
     }
-  }, [browserSupportsSpeechRecognition]);
+  }, [browserSupportsSpeechRecognition, shouldListen]);
 
   if (!browserSupportsSpeechRecognition) {
     return <div>Twoja przeglądarka nie wspiera rozpoznawania mowy.</div>;
   }
 
-  const startListening = () => SpeechRecognition.startListening({ continuous: true, language: "pl-PL" });
-  const stopListening = () => SpeechRecognition.stopListening();
+  const startListening = async () => {
+    setShouldListen(true);
+    await SpeechRecognition.startListening({
+      continuous: true,
+      language: "pl-PL",
+    });
+  };
+
+  const stopListening = async () => {
+    setShouldListen(false);
+    await SpeechRecognition.stopListening();
+  };
 
   const handleSend = async () => {
-    stopListening();
+    await stopListening();
     const res = await fetch("/api/openai", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
