@@ -43,6 +43,11 @@ export const VoiceCatcher = () => {
     await SpeechRecognition.stopListening();
   };
 
+  const resetListening = async () => {
+    stopListening();
+    resetTranscript();
+  };
+
   const handleSend = async () => {
     await stopListening();
     const res = await fetch("/api/openai", {
@@ -60,6 +65,7 @@ export const VoiceCatcher = () => {
       <p>🔴 Nagrywanie: {listening ? "aktywne" : "zatrzymane"}</p>
       <button onClick={startListening}>Start</button>
       <button onClick={stopListening}>Stop</button>
+      <button onClick={resetListening}>Resetuj</button>
       <button onClick={handleSend} disabled={!transcript}>
         Wyślij
       </button>
