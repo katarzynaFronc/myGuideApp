@@ -61,15 +61,53 @@ export const VoiceCatcher = () => {
   };
 
   return (
-    <div>
-      <p>🔴 Nagrywanie: {listening ? "aktywne" : "zatrzymane"}</p>
-      <button onClick={startListening}>Start</button>
-      <button onClick={stopListening}>Stop</button>
-      <button onClick={resetListening}>Resetuj</button>
-      <button onClick={handleSend} disabled={!transcript}>
-        Wyślij
-      </button>
-      <p>Tekst: {transcript}</p>
-    </div>
+    <>
+      <div className="container">
+        <div className="row">
+          <div className="col">
+            <div className=" p-3 text-center">
+              <p>🔴 Nagrywanie: {listening ? "aktywne" : "zatrzymane"}</p>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <div className=" p-3 text-center">
+              <button type="button" className="btn btn-primary" onClick={startListening}>
+                Start
+              </button>
+            </div>
+          </div>
+          <div className="col">
+            <div className=" p-3 text-center">
+              <button type="button" className="btn btn-primary" onClick={stopListening}>
+                Stop
+              </button>
+            </div>
+          </div>
+          <div className="col">
+            <div className=" p-3 text-center">
+              <button type="button" className="btn btn-primary" onClick={resetListening}>
+                Resetuj
+              </button>
+            </div>
+          </div>
+          <div className="col">
+            <div className=" p-3 text-center">
+              <button onClick={handleSend} disabled={!transcript}>
+                Wyślij
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col">
+            <div className="bg-light border p-3 text-center">
+              <p>Tekst: {transcript}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
